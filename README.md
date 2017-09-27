@@ -9,13 +9,13 @@ Upon completion, Rocket will be compatible with Yarn, and NPM. It will host all,
 
 
 ### My plans
----
+
 I am currently figuring out the NPM registry login system. After I've figured this out, I will be working on search functionality and package information and tarball fetching. If I am not able to implement the login and file pushing system, (compatible with Yarn/NPM), I will release a small CLI for doing this. 
 
 
 
 ### Current Stack. 
----
+
 + Express, 
 + MySQL with Knex
 
