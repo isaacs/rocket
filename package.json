@@ -1,0 +1,29 @@
+{
+  "name": "rocket",
+  "version": "1.0.0",
+  "description": "A completly seperate registry to NPM, but with all the packages",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "bookshelf": "^0.10.4",
+    "connect-timeout": "^1.9.0",
+    "express": "^4.15.5",
+    "express-fileupload": "^0.2.0",
+    "global": "^4.3.2",
+    "json-middleware": "^1.0.2",
+    "knex": "^0.13.0",
+    "multer": "^1.3.0",
+    "mysql": "^2.14.1",
+    "nodemon": "^1.12.1",
+    "request": "^2.83.0",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "ozzie1998",
+  "license": "ISC"
+}
