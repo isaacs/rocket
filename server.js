@@ -67,6 +67,7 @@ app.get('/', (req, response) => {
       response_.scripts = packages.scripts || {};
       response_.dist.tarball = `https://localhost:3000/${packages.name}.tgz`; //temporary entry format**
       // TODO: finalise the temporary entry format
+      // TODO: Finish this off.
     }
   });
 });
