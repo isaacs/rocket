@@ -8,6 +8,7 @@ const fs = require('fs');
 const mysql = require('mysql');
 const kenxConfig = require('./knexfile.js');
 
+// consealing the passwords and less code on the server
 const knex = require('knex')(kenxConfig.development);
 const bookshelf = require('bookshelf')(knex);
 
