@@ -8,25 +8,8 @@ const bcrypt = require('bcrypt');
 const formidable = require('formidable');
 const path = require('path');
 const jsonParser = bodyParser.json({ type: 'application/json' });
-let response_ = {
-  name: null,
-  version: null,
-  description: null,
-  dependencies: null,
-  devDependencies: null,
-  scripts: null,
-  author: null,
-  license: 'ISC',
-  bin: null,
-  dist: {
-    tarball: null,
-    shasum: null,
-  },
-  directories: null,
-  _id: null,
-};
-let responsePackageJson;
-let responsePackageJsonLength = responsePackageJson.length || 0;
+let plainTextHashed;
+//NOTE: The package lookup is being re-planned,
 // Configs of modules
 const knex = require('knex')({
   client: 'mysql',
@@ -38,6 +21,8 @@ const knex = require('knex')({
     port: 8889,
   },
 });
+//Temporary BookShelf.JS models, still learning Bookshelf.
+
 const bookshelf = require('bookshelf')(knex);
 const Users = bookshelf.Model.extend({
   tableName: 'Users',
@@ -54,23 +39,7 @@ const id = 'org.couchdb.user:';
 
 // NOTE: Package Info fetcher
 // NOTE: And server of downloadable tarballs
-app.get('/', (req, response) => {
-  new packageInfo().fetch().then(packages => {
-    if (packages !== undefined) {
-      packages = packages.toJSON();
-      responsePackageJson = packages.packageJson;
-      response_.name = packages.name;
-      response_.version = packages.version;
-      response_.description = packages.description;
-      response_.author = packages.author || {};
-      response_.bin = packages.bin || {};
-      response_.scripts = packages.scripts || {};
-      response_.dist.tarball = `https://localhost:3000/${packages.name}.tgz`; //temporary entry format**
-      // TODO: finalise the temporary entry format
-      // TODO: Finish this off.
-    }
-  });
-});
+app.get('/', (req, response) => {});
 
 // NOTE: Publish download handler.
 // will determine if the downloaded file is a proper
@@ -106,28 +75,30 @@ app.put('/-/user/org.couchdb.user:username', jsonParser, (req, response) => {
             .then(users => {
               if (users !== undefined) {
                 if (users.toJSON().name === req.body.name) {
-                  // response.status(201);
-                  // response.send({ ok: true });
-                  //  console.log(verificationSalt);
                   console.log(req.body.name);
                   console.log(verificationSalt);
                   bcrypt
-                    .compare(
-                      req.body.password,
-                      bcrypt.hashSync(req.body.password, verificationSalt)
-                    )
-                    .then(result => {
-                      console.log(result);
-                      if (result) {
-                        response.status(201);
-                        response.send({ ok: true });
-                        // in the next few versions we will create a session here
-                      } else {
-                        response.send({ ok: false, message: 'wrong password' });
-                      }
-                    })
-                    .catch(e => {
-                      console.log(e);
+                    .hash(req.body.password, verificationSalt)
+                    .then(comparisonHash => {
+                      // now compare the plain text password to the hash.
+                      bcrypt
+                        .compare(req.body.password, comparisonHash)
+                        .then(comparisonResult => {
+                          if (comparisonResult) {
+                            // yey correct password.
+                            // NOTE: Thinking about sessions?
+                            response.status(201);
+                            response.send({ ok: true, message: 'logged in' });
+                          } else {
+                            // you shall not pass!
+                            response.status(201);
+                            response.send({
+                              ok: false,
+                              message:
+                                'Incorrect username or password combination',
+                            });
+                          }
+                        });
                     });
                 } else {
                   console.log('User does not exist');
