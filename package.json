@@ -1,6 +1,6 @@
 {
   "name": "rocket",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "A completly seperate registry to NPM, but with all the packages",
   "main": "server.js",
   "dependencies": {
