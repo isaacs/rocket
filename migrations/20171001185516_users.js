@@ -1,11 +1,11 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('users', function(table) {
-    table.increments();
+    table.uuid('id');
+    table.timestamps();
     table.string('name');
     table.string('email', 128);
-    table.string('role').defaultTo('user');
     table.string('password');
-    table.timestamps();
+    table.string('role').defaultTo('user');
   });
 };
 

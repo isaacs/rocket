@@ -1,5 +1,6 @@
 # Rocket
 A fully NPM/Yarn compatible repository, without NPM.
+<<<<<<< HEAD
 <br/>
 
 I started working on Rocket after hearing about the ridiculous views of NPM's CEO.
@@ -20,5 +21,32 @@ Upon completion, Rocket will compatible to Yarn and NPM registry. It will host a
 ### Current Stack.
 + Express,
 + MySQL with Knex & bookshelf.js
+=======
 
-Hopefully I will be able to push some working code soon, I am currently busy with college assignments. But I will make it work!  
+
+I started working on Rocket after hearing about the ridiculous views of NPM's CEO.
+
+I also wanted something for the Node community to use that is fully 100% open source, as NPM's registry isn't.
+
+### Contents:
+
+- Contribution guidelines.
+- General code documentation.
+- Info on NPM's API.
+
+
+
+
+### Contribution guidelines.
+
+Please only make a PR if it is useful, and follows the StandardJS standard.
+
+TODO: Add more here.
+>>>>>>> c794567650720f1c3c8590d5aa5ec907e6fcf7dc
+
+
+
+
+### TODO.
+
+- Write the script to populate the users database with a default dummy user. 
