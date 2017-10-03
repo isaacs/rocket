@@ -1,11 +1,11 @@
 {
   "name": "rocket",
-  "version": "0.0.2",
-  "description":
-    "A completly seperate registry to NPM, but with all the packages",
+  "version": "1.0.4",
+  "description": "A completly seperate registry to NPM, but with all the packages",
   "main": "server.js",
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "bookshelf": "^0.10.4",
     "express": "^4.15.5",
     "global": "^4.3.2",
@@ -14,6 +14,7 @@
     "mysql": "^2.14.1",
     "nodemon": "^1.12.1",
     "request": "^2.83.0",
+    "targz": "^1.0.1",
     "url": "^0.11.0"
   },
   "devDependencies": {},
