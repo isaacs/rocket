@@ -1,7 +1,8 @@
 {
   "name": "rocket",
-  "version": "1.0.4",
-  "description": "A completly seperate registry to NPM, but with all the packages",
+  "version": "0.0.2",
+  "description":
+    "A completly seperate registry to NPM, but with all the packages",
   "main": "server.js",
   "dependencies": {
     "bcrypt": "^1.0.3",
