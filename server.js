@@ -2,12 +2,22 @@ const mysql = require('mysql');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const fs = require('fs-extra');
+const fs = require('fs');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const formidable = require('formidable');
-const path = require('path');
-const jsonParser = bodyParser.json({ type: 'application/json' });
+const targz = require('targz');
+let publishBuffer;
+const jsonParser = bodyParser.json({
+  limit: '50mb',
+  type: 'application/json',
+});
+if (!fs.existsSync('packages')) {
+  try {
+    fs.mkdirSync('packages');
+  } catch (e) {
+    console.log(e);
+  }
+}
 let plainTextHashed;
 //NOTE: The package lookup is being re-planned,
 // Configs of modules
@@ -45,12 +55,48 @@ app.get('/', (req, response) => {});
 // will determine if the downloaded file is a proper
 // package after it is extracted
 // NOTE: Fix this. This is hardly a repository without it.
-app.put('/:pkgName', (req, response) => {
-  response.status(400);
-  response.send({
-    ok: false,
-    message: 'This feature is not working - we are very sorry!',
-  });
+app.put('/:pkgName', jsonParser, (req, response) => {
+  let data = req.body;
+  if (data._attachments[Object.keys(data._attachments)].data) {
+    publishBuffer = new Buffer(
+      data._attachments[Object.keys(data._attachments)].data,
+      'base64'
+    );
+    fs.writeFile(
+      `packages/${Object.keys(data._attachments)[0]}`,
+      publishBuffer,
+      error => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(
+            `Downloaded ${Object.keys(
+              data._attachments
+            )[0]} to 'packages/${Object.keys(data._attachments)[0]}'`
+          );
+          // check if the downloaded file exists...
+          fs.exists(
+            `packages/${Object.keys(data._attachments)[0]}`,
+            (error, exists) => {
+              if (exists) {
+                response.status(201);
+                response.send({
+                  ok: true,
+                  message: 'Received loud and clear.',
+                });
+              } else {
+                response.status(201); // look into the correct NPM error code to use.
+                response.send({
+                  ok: false,
+                  message: 'unable to locate the downloaded package.tgz file',
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
 });
 
 let verificationSalt;
