@@ -6,7 +6,7 @@ module.exports = {
     connection: {
       host: 'localhost',
       user: 'root',
-      password: 'root',
+      password: process.env.db_password,
       database: 'Rocket',
       port: 8889,
     },
