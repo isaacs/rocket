@@ -6,5 +6,9 @@ npm.log
 .Ds_Store
 .DS_Store
 generatePassword.js
+t.js
+packages
+npm.log
+yarn-error.log
 isaacs
 NPM
