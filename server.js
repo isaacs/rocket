@@ -1,7 +1,12 @@
 const express = require('express'),
+<<<<<<< HEAD
   app = express();
 
 const PORT = 3000 || process.env.PORT_;
+=======
+      app = express();
+
+>>>>>>> 2ad9ca280e6c853de9695c255cfce25d77378585
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -36,7 +41,7 @@ const knex = require('knex')({
 
 const bookshelf = require('bookshelf')(knex);
 const Users = bookshelf.Model.extend({
-  tableName: 'Users',
+    tableName: 'Users',
 });
 const Salt = bookshelf.Model.extend({
   tableName: 'Salts',
@@ -175,5 +180,5 @@ app.put('/-/user/org.couchdb.user:username', jsonParser, (req, response) => {
 });
 
 app.listen(PORT, function() {
-  console.log('Rocket is listening on port 3000');
+    console.log('Rocket is listening on port ',PORT);
 });
