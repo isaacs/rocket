@@ -1,4 +1,3 @@
-// Update with your config settings.
 
 module.exports = {
   development: {
@@ -6,7 +5,7 @@ module.exports = {
     connection: {
       host: 'localhost',
       user: 'root',
-      password: process.env.db_password,
+      password: 'root', // change accordingly.
       database: 'Rocket',
       port: 8889,
     },
