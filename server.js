@@ -1,17 +1,22 @@
 const express = require('express'),
   app = express();
-const PORT = 3000 || process.env.PORT_;
 
+const PORT = 3000 || process.env.PORT_;
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const targz = require('targz');
 let publishBuffer;
+let publishPackageId;
+let data; // means I can 'copy-paste' from my t.js test file. lol, lazy.
+let Continue = false;
+
 const jsonParser = bodyParser.json({
   limit: '50mb',
   type: 'application/json',
 });
+
 if (!fs.existsSync('packages')) {
   try {
     fs.mkdirSync('packages');
@@ -42,7 +47,7 @@ const Salt = bookshelf.Model.extend({
   tableName: 'Salts',
 });
 
-const packageInfo = bookshelf.Model.extend({
+const packageOperations = bookshelf.Model.extend({
   tableName: 'packages',
 });
 // config section end
@@ -53,12 +58,24 @@ const id = 'org.couchdb.user:';
 app.get('/', (req, response) => {});
 
 // NOTE: Publish download handler.
-// will determine if the downloaded file is a proper
-// package after it is extracted
 // NOTE: Fix this. This is hardly a repository without it.
 app.put('/:pkgName', jsonParser, (req, response) => {
-  let data = req.body;
-  if (data._attachments[Object.keys(data._attachments)].data) {
+  data = req.body;
+  //First check if this package hasn't already been published.
+
+  new packageOperations({
+    Name: data.versions[Object.keys(data.versions)]._id,
+  })
+    .fetch()
+    .then(result => {
+      if (!result.get('Name')) {
+        Continue = true;
+      }
+    });
+  if (
+    Continue === true &&
+    data._attachments[Object.keys(data._attachments)].data
+  ) {
     publishBuffer = new Buffer(
       data._attachments[Object.keys(data._attachments)].data,
       'base64'
@@ -75,6 +92,24 @@ app.put('/:pkgName', jsonParser, (req, response) => {
               data._attachments
             )[0]} to 'packages/${Object.keys(data._attachments)[0]}'`
           );
+          // now create the entry, and submit to the database
+          publishPackageId = data.versions[Object.keys(data.versions)]._id;
+          // NOTE: Using a basic file structure for the packages database
+          // NOTE: Because I wan't to experiment with a few things
+          const createPublishEntry = new packageOperations({
+            Name: publishPackageId,
+            packageData: JSON.stringify(data),
+          });
+          createPublishEntry
+            .save(null, { method: 'insert' })
+            .then(packagePublishInsert => {
+              if (packagePublishInsert) {
+                console.log('yey! done');
+              }
+            })
+            .catch(e => {
+              console.log(e);
+            });
           // check if the downloaded file exists...
           fs.exists(
             `packages/${Object.keys(data._attachments)[0]}`,
@@ -97,6 +132,9 @@ app.put('/:pkgName', jsonParser, (req, response) => {
         }
       }
     );
+  }
+  if (!Continue) {
+    response.send({ ok: false, error: 'EPUBLISHCONFLICT' });
   }
 });
 
@@ -175,5 +213,5 @@ app.put('/-/user/org.couchdb.user:username', jsonParser, (req, response) => {
 });
 
 app.listen(PORT, function() {
-  console.log('Rocket is listening on port ', PORT);
+  console.log('Rocket is listening on port 3000');
 });
